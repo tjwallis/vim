@@ -41,21 +41,18 @@ set noswapfile
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-if has("vms")
-  set nobackup		" do not keep a backup file, use versions instead
-else
-  set backup		" keep a backup file
-endif
+set nobackup		" do not keep a backup file, use versions instead
+set nowritebackup " Only in case you don't want a backup file while editing
 set history=100		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 set number
-colorscheme torte
+colorscheme jellybeans
 set expandtab
 set smarttab
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=3
+set tabstop=3
 
 set lbr
 set tw=500
