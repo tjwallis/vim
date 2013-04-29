@@ -1,0 +1,7 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_1='/srv/http/prima'
+let g:netrw_dirhist_2='/srv/http/prima/sites'
+let g:netrw_dirhist_3='/srv/http/prima/sites/all'
+let g:netrw_dirhist_4='/srv/http/prima/sites/all/modules'
+let g:netrw_dirhist_5='/srv/http/prima/sites/all/modules/uc_myprice'

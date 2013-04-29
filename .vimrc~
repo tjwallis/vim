@@ -1,3 +1,14 @@
+" An example for a vimrc file.
+"
+" Maintainer:	Bram Moolenaar <Bram@vim.org>
+" Last change:	2011 Apr 15
+"
+" To use it, copy it to
+"     for Unix and OS/2:  ~/.vimrc
+"	      for Amiga:  s:.vimrc
+"  for MS-DOS and Win32:  $VIM\_vimrc
+"	    for OpenVMS:  sys$login:.vimrc
+
 execute pathogen#infect()
 filetype off
 syntax on
@@ -30,17 +41,18 @@ set noswapfile
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
+set nobackup		" do not keep a backup file, use versions instead
 set nowritebackup " Only in case you don't want a backup file while editing
 set history=100		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 set number
-colorscheme herald
+colorscheme jellybeans
 set expandtab
 set smarttab
-set shiftwidth=2
-set tabstop=2
+set shiftwidth=3
+set tabstop=3
 
 set lbr
 set tw=500
