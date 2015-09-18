@@ -1,10 +1,100 @@
-execute pathogen#infect()
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
+set t_Co=256
+syntax on
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set mouse=a
+if has('unnamedplus')
+  set clipboard=unnamedplus
+else
+  set clipboard=unnamed
+endif
+set cursorline
+set showcmd
+set number
+set hidden
+set hlsearch
+set backspace=2
+let mapleader=","
+autocmd Filetype html setlocal ts=4 sts=4 sw=4 omnifunc=htmlcomplete#CompleteTags
+autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+autocmd FileType javascript setlocal ts=4 sts=4 sw=4
+autocmd FileType python setlocal ts=4 sts=4 sw=4
+autocmd FileType css setlocal ts=4 noet sw=4 omnifunc=csscomplete#CompleteCSS
+autocmd bufread *.coffee set ft=coffee
+autocmd bufread *.less set ft=less
+autocmd bufread *.md set ft=markdown
+autocmd bufread Cakefile set ft=coffee
+
+if has('nvim')
+    let s:editor_root=expand("~/.nvim")
+else
+    let s:editor_root=expand("~/.vim")
+endif
+" Setting up Vundle - the vim plugin bundler
+let vundle_installed=1
+let vundle_readme=s:editor_root . '/bundle/vundle/README.md'
+if !filereadable(vundle_readme)
+    echo "Installing Vundle.."
+    echo ""
+    " silent execute "! mkdir -p ~/." . s:editor_path_name . "/bundle"
+    silent call mkdir(s:editor_root . '/bundle', "p")
+    silent execute "!git clone https://github.com/gmarik/vundle " . s:editor_root . "/bundle/vundle"
+    let vundle_installed=0
+endif
+let &rtp = &rtp . ',' . s:editor_root . '/bundle/vundle/'
+call vundle#rc(s:editor_root . '/bundle')
+
+Bundle 'gmarik/vundle.vim'
+Bundle 'vim-ctrlp'
+Bundle 'vim-easilymotion'
+Bundle 'syntastic'
+Bundle 'tagbar'
+Bundle 'nerdtree'
+Bundle 'fugitive'
+Bundle 'nerdcommenter'
+Bundle 'php.vim'
+Bundle 'php-phpqa'
+Bundle 'snipmate'
+Bundle 'ultisnips'
+Bundle 'vim-easytags'
+Bundle 'vim-less'
+Bundle 'vim-misc'
+Bundle 'vim-supertab'
+Bundle 'vim-sensible'
+Bundle 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
+if vundle_installed == 0
+    echo "Installing Bundles, please ignore key map error messages"
+    echo ""
+    :BundleInstall
+endif
+" Setting up Vundle - the vim plugin bundler end
 filetype off
 syntax on
 filetype plugin indent on
 
+" Syntastic
+let g:syntastic_check_on_open=1
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_phpcs_disable=1
+let g:syntastic_puppet_lint_arguments="--no-only_variable_string-check --no-80chars-check --no-hard_tabs-check"
+let g:syntastic_phpcs_conf="--standard=Drupal --extensions=php,module,inc,install,test,profile,theme"
+
+" Fugitive
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+nmap <F8> :TagbarToggle<CR>
+let g:tagbar_type_php  = {
+    \ 'ctagstype' : 'php',
+    \ 'kinds'     : [
+        \ 'i:interfaces',
+        \ 'c:classes',
+        \ 'd:constant definitions',
+        \ 'f:functions',
+        \ 'j:javascript functions:1'
+    \ ]
+  \ }
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible
@@ -38,9 +128,10 @@ set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 set number
-colorscheme herald
+colorscheme Tomorrow-Night-Eighties
 set expandtab
-set smarttab
+set autoindent
+set smartindent
 set shiftwidth=2
 set tabstop=2
 
@@ -118,3 +209,15 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
 		  \ | wincmd p | diffthis
 endif
+
+" auto complete and tab functionality :D
+function! InsertTabWrapper()
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+        return "\<tab>"
+    else
+        return "\<c-p>"
+    endif
+endfunction
+
+inoremap <tab> <c-r>=InsertTabWrapper()<cr>
