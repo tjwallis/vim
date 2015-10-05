@@ -31,6 +31,13 @@ if has('nvim')
 else
     let s:editor_root=expand("~/.vim")
 endif
+if has("unix")
+    let s:uname = system("uname")
+    let g:python_host_prog='/usr/bin/python'
+    if s:uname == "Darwin\n"
+        let g:python_host_prog='/usr/bin/python'
+    endif
+endif
 " Setting up Vundle - the vim plugin bundler
 let vundle_installed=1
 let vundle_readme=s:editor_root . '/bundle/vundle/README.md'
@@ -62,7 +69,8 @@ Bundle 'vim-less'
 Bundle 'vim-misc'
 Bundle 'vim-supertab'
 Bundle 'vim-sensible'
-Bundle 'chriskempson/tomorrow-theme', {'rtp': 'vim/'}
+Bundle 'colorschemes'
+Bundle 'vim-blade'
 if vundle_installed == 0
     echo "Installing Bundles, please ignore key map error messages"
     echo ""
@@ -72,6 +80,26 @@ endif
 filetype off
 syntax on
 filetype plugin indent on
+
+" CtrlP
+" Setup some default ignores
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](\.(git|hg|svn)|\_site)$',
+  \ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg)$',
+\}
+
+" Use the nearest .git directory as the cwd
+" This makes a lot of sense if you are working on a project that is in version
+" control. It also supports works with .svn, .hg, .bzr.
+let g:ctrlp_working_path_mode = 'r'
+
+" Use a leader instead of the actual named binding
+nmap <leader>p :CtrlP<cr>
+
+" Easy bindings for its various modes
+nmap <leader>bb :CtrlPBuffer<cr>
+nmap <leader>bm :CtrlPMixed<cr>
+nmap <leader>bs :CtrlPMRU<cr>
 
 " Syntastic
 let g:syntastic_check_on_open=1
@@ -128,12 +156,9 @@ set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 set number
-colorscheme Tomorrow-Night-Eighties
 set expandtab
 set autoindent
 set smartindent
-set shiftwidth=2
-set tabstop=2
 
 set lbr
 set tw=500
@@ -145,7 +170,6 @@ set wrap
 map j gj
 map k gk
 
-
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, "t", "", "g")
 
@@ -155,6 +179,12 @@ map Q gq
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
 inoremap <C-U> <C-G>u<C-U>
+
+
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
@@ -209,6 +239,8 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
 		  \ | wincmd p | diffthis
 endif
+
+colorscheme Tomorrow-Night-Eighties
 
 " auto complete and tab functionality :D
 function! InsertTabWrapper()
