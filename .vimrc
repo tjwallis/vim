@@ -40,19 +40,19 @@ if has("unix")
 endif
 " Setting up Vundle - the vim plugin bundler
 let vundle_installed=1
-let vundle_readme=s:editor_root . '/bundle/vundle/README.md'
+let vundle_readme=s:editor_root . '/bundle/Vundle/README.md'
 if !filereadable(vundle_readme)
     echo "Installing Vundle.."
     echo ""
     " silent execute "! mkdir -p ~/." . s:editor_path_name . "/bundle"
     silent call mkdir(s:editor_root . '/bundle', "p")
-    silent execute "!git clone https://github.com/gmarik/vundle " . s:editor_root . "/bundle/vundle"
+    silent execute "!git clone https://github.com/gmarik/Vundle " . s:editor_root . "/bundle/vundle"
     let vundle_installed=0
 endif
-let &rtp = &rtp . ',' . s:editor_root . '/bundle/vundle/'
+let &rtp = &rtp . ',' . s:editor_root . '/bundle/Vundle/'
 call vundle#rc(s:editor_root . '/bundle')
 
-Bundle 'gmarik/vundle.vim'
+Bundle 'Vundle'
 Bundle 'vim-ctrlp'
 Bundle 'vim-easilymotion'
 Bundle 'syntastic'
