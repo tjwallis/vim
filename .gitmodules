@@ -52,3 +52,7 @@
 [submodule "bundle/chriskempson/tomorrow-theme"]
 	path = bundle/chriskempson/tomorrow-theme
 	url = https://github.com/chriskempson/vim-tomorrow-theme.git
+[submodule "bundle/syntastic"]
+	path = bundle/syntastic
+	url = https://github.com/scrooloose/syntastic.git
+
