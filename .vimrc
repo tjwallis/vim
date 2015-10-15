@@ -2,7 +2,7 @@ set t_Co=256
 syntax on
 set tabstop=4
 set shiftwidth=4
-set expandtab
+"set expandtab
 set mouse=a
 if has('unnamedplus')
   set clipboard=unnamedplus
@@ -71,6 +71,7 @@ Bundle 'vim-supertab'
 Bundle 'vim-sensible'
 Bundle 'colorschemes'
 Bundle 'vim-blade'
+Bundle 'vim-airline'
 if vundle_installed == 0
     echo "Installing Bundles, please ignore key map error messages"
     echo ""
@@ -156,9 +157,7 @@ set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 set number
-set expandtab
 set autoindent
-set smartindent
 
 set lbr
 set tw=500
