@@ -2,7 +2,54 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
+if has('nvim')
+	let s:editor_root=expand("~/.nvim")
+else
+	let s:editor_root=expand("~/.vim")
+endif
+if has("unix")
+	let s:uname = system("uname")
+	let g:python_host_prog='/usr/bin/python'
+	if s:uname == "Darwin\n"
+		let g:python_host_prog='/usr/bin/python'
+	endif
+endif
+
+" Setting up Vundle - the vim plugin bundler
 filetype off
+let &rtp = &rtp . ',' . s:editor_root . '/bundle/Vundle.vim'
+call vundle#begin(s:editor_root . '/bundle')
+
+" Vundle Manages itself
+Plugin 'VundleVim/Vundle.vim'
+
+" Plugins
+Plugin 'kien/ctrlp.vim'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'majutsushi/tagbar'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/syntastic'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'StanAngeloff/php.vim'
+Plugin 'joonty/vim-phpqa'
+Plugin 'MarcWeber/vim-addon-mw-utils'
+Plugin 'tomtom/tlib_vim'
+Plugin 'msanders/snipmate.vim'
+Plugin 'vim-scripts/UltiSnips'
+Plugin 'xolox/vim-easytags'
+Plugin 'xolox/vim-misc'
+Plugin 'tpope/vim-sensible'
+Plugin 'bling/vim-airline'
+
+" Color Schemes
+Plugin 'flazz/vim-colorschemes'
+
+call vundle#end()
+filetype plugin indent on    " required
+" Setting up Vundle - the vim plugin bundler end
+
 syntax on
 filetype plugin on
 filetype indent on
@@ -61,9 +108,9 @@ set tabstop=4
 set shiftwidth=4
 set mouse=a
 if has('unnamedplus')
-  set clipboard=unnamedplus
+	set clipboard=unnamedplus
 else
-  set clipboard=unnamed
+	set clipboard=unnamed
 endif
 set cursorline
 set showcmd
@@ -98,18 +145,18 @@ map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 " Switch CWD to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
 
-" Specify the behavior when switching between buffers 
+" Specify the behavior when switching between buffers
 try
-  set switchbuf=useopen,usetab,newtab
-  set stal=2
+	set switchbuf=useopen,usetab,newtab
+	set stal=2
 catch
 endtry
 
 " Return to last edit position when opening files (You want this!)
 autocmd BufReadPost *
-     \ if line("'\"") > 0 && line("'\"") <= line("$") |
-     \   exe "normal! g`\"" |
-     \ endif
+	\ if line("'\"") > 0 && line("'\"") <= line("$") |
+	\   exe "normal! g`\"" |
+	\ endif
 " Remember info about open buffers on close
 set viminfo^=%
 
@@ -122,64 +169,12 @@ autocmd FileType css setlocal ts=4 noet sw=4 omnifunc=csscomplete#CompleteCSS
 autocmd bufread *.less set ft=less
 autocmd bufread *.md set ft=markdown
 
-if has('nvim')
-	let s:editor_root=expand("~/.nvim")
-else
-	let s:editor_root=expand("~/.vim")
-endif
-if has("unix")
-	let s:uname = system("uname")
-	let g:python_host_prog='/usr/bin/python'
-	if s:uname == "Darwin\n"
-		let g:python_host_prog='/usr/bin/python'
-	endif
-endif
-" Setting up Vundle - the vim plugin bundler
-let vundle_installed=1
-let vundle_readme=s:editor_root . '/bundle/Vundle/README.md'
-if !filereadable(vundle_readme)
-	echo "Installing Vundle.."
-	echo ""
-	" silent execute "! mkdir -p ~/." . s:editor_path_name . "/bundle"
-	silent call mkdir(s:editor_root . '/bundle', "p")
-	silent execute "!git clone https://github.com/gmarik/Vundle " . s:editor_root . "/bundle/vundle"
-	let vundle_installed=0
-endif
-let &rtp = &rtp . ',' . s:editor_root . '/bundle/Vundle/'
-call vundle#rc(s:editor_root . '/bundle')
-
-Bundle 'Vundle'
-Bundle 'vim-ctrlp'
-Bundle 'vim-easilymotion'
-Bundle 'syntastic'
-Bundle 'tagbar'
-Bundle 'nerdtree'
-Bundle 'fugitive'
-Bundle 'nerdcommenter'
-Bundle 'php.vim'
-Bundle 'php-phpqa'
-Bundle 'snipmate'
-Bundle 'ultisnips'
-Bundle 'vim-easytags'
-Bundle 'vim-less'
-Bundle 'vim-misc'
-"Bundle 'vim-supertab'
-Bundle 'vim-sensible'
-Bundle 'colorschemes'
-Bundle 'vim-blade'
-Bundle 'vim-airline'
-if vundle_installed == 0
-	echo "Installing Bundles, please ignore key map error messages"
-	echo ""
-	:BundleInstall
-endif
-" Setting up Vundle - the vim plugin bundler end
 
 " CtrlP
 " Setup some default ignores
 let g:ctrlp_custom_ignore = {
-  \ 'dir': '\v[\/](\.(git|hg|svn)|\_site)$',
-  \ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg)$',
+	\ 'dir': '\v[\/](\.(git|hg|svn)|\_site)$',
+	\ 'file': '\v\.(exe|so|dll|class|png|jpg|jpeg)$',
 \}
 
 " Use the nearest .git directory as the cwd
@@ -219,7 +214,7 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
+	let g:airline_symbols = {}
 endif
 let g:airline_symbols.space = "\ua0"
 
@@ -301,7 +296,7 @@ endif " has("autocmd")
 " Only define it when not defined already.
 if !exists(":DiffOrig")
 	command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-		  \ | wincmd p | diffthis
+		\ | wincmd p | diffthis
 endif
 
 colorscheme Tomorrow-Night-Eighties
@@ -332,42 +327,65 @@ map <leader>sa zg
 map <leader>s? z=
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Insert Mode Mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+inoremap $1 ()<esc>i
+inoremap $2 []<esc>i
+inoremap $3 {}<esc>i
+inoremap $4 {<esc>o}<esc>O
+inoremap $q ''<esc>i
+inoremap $e ""<esc>i
+inoremap $t <><esc>i
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Insert Mode Mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+vnoremap $1 <esc>`>a)<esc>`<i(<esc>
+vnoremap $2 <esc>`>a]<esc>`<i[<esc>
+vnoremap $3 <esc>`>a}<esc>`<i{<esc>
+vnoremap $$ <esc>`>a"<esc>`<i"<esc>
+vnoremap $q <esc>`>a'<esc>`<i'<esc>
+vnoremap $e <esc>`>a"<esc>`<i"<esc>
+
+command W w !sudo tee % > /dev/null
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! CmdLine(str)
-    exe "menu Foo.Bar :" . a:str
-    emenu Foo.Bar
-    unmenu Foo
+	exe "menu Foo.Bar :" . a:str
+	emenu Foo.Bar
+	unmenu Foo
 endfunction
 
 function! VisualSelection(direction) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
+	let l:saved_reg = @"
+	execute "normal! vgvy"
 
-    let l:pattern = escape(@", '\\/.*$^~[]')
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
+	let l:pattern = escape(@", '\\/.*$^~[]')
+	let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-    if a:direction == 'b'
-        execute "normal ?" . l:pattern . "^M"
-    elseif a:direction == 'gv'
-        call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
-    elseif a:direction == 'replace'
-        call CmdLine("%s" . '/'. l:pattern . '/')
-    elseif a:direction == 'f'
-        execute "normal /" . l:pattern . "^M"
-    endif
+	if a:direction == 'b'
+		execute "normal ?" . l:pattern . "^M"
+	elseif a:direction == 'gv'
+		call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
+	elseif a:direction == 'replace'
+		call CmdLine("%s" . '/'. l:pattern . '/')
+	elseif a:direction == 'f'
+		execute "normal /" . l:pattern . "^M"
+	endif
 
-    let @/ = l:pattern
-    let @" = l:saved_reg
+	let @/ = l:pattern
+	let @" = l:saved_reg
 endfunction
 
 
 " Returns true if paste mode is enabled
 function! HasPaste()
-    if &paste
-        return 'PASTE MODE  '
-    en
-    return ''
+	if &paste
+		return 'PASTE MODE  '
+	en
+	return ''
 endfunction
 
 " Don't close window, when deleting a buffer
