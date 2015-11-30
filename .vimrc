@@ -32,16 +32,35 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
-Plugin 'StanAngeloff/php.vim'
-Plugin 'joonty/vim-phpqa'
+"Plugin 'StanAngeloff/php.vim'
+"Plugin 'joonty/vim-phpqa'
+"Plugin 'vim-scripts/PDV--phpDocumentor-for-Vim'
+Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
-Plugin 'msanders/snipmate.vim'
+" Optional:
+Plugin 'honza/vim-snippets'
 Plugin 'vim-scripts/UltiSnips'
 Plugin 'xolox/vim-easytags'
 Plugin 'xolox/vim-misc'
 Plugin 'tpope/vim-sensible'
 Plugin 'bling/vim-airline'
+
+Plugin 'pangloss/vim-javascript'
+
+Plugin 'matze/vim-move'
+
+Plugin 'mattn/emmet-vim'
+
+Plugin 'junegunn/goyo.vim'
+
+" Plugin 'Valloric/YouCompleteMe'
+Plugin 'Shougo/neocomplcache.vim'
+Plugin 'Shougo/neosnippet.vim'
+
+" Enable Markdown Preview + GitHub flavored markdown
+Plugin 'jtratner/vim-flavored-markdown.git'
+Plugin 'nelstrom/vim-markdown-preview'
 
 " Color Schemes
 Plugin 'flazz/vim-colorschemes'
@@ -49,10 +68,6 @@ Plugin 'flazz/vim-colorschemes'
 call vundle#end()
 filetype plugin indent on    " required
 " Setting up Vundle - the vim plugin bundler end
-
-syntax on
-filetype plugin on
-filetype indent on
 
 set autoread
 
@@ -101,8 +116,6 @@ set wrap
 
 
 
-set t_Co=256
-syntax on
 set noexpandtab
 set tabstop=4
 set shiftwidth=4
@@ -119,7 +132,7 @@ set hidden
 set hlsearch
 set backspace=2
 " highlight tabs and trailing spaces
-set listchars=tab:\|-,trail:-
+set listchars=tab:▸\ ,trail:~
 set list
 
 """
@@ -137,6 +150,13 @@ map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
 map <leader>tm :tabmove
+
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+nmap <silent> ,/ :nohlsearch<CR>
+
+nnoremap ; :
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -160,15 +180,61 @@ autocmd BufReadPost *
 " Remember info about open buffers on close
 set viminfo^=%
 
-let mapleader=","
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplcache#undo_completion()
+inoremap <expr><C-l>     neocomplcache#complete_common_string()
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplcache#smart_close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><tab>  pumvisible() ? "\<C-n>" : "\<tab>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
+
 autocmd Filetype html setlocal ts=4 sts=4 sw=4 omnifunc=htmlcomplete#CompleteTags
 autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
-autocmd FileType javascript setlocal ts=4 sts=4 sw=4
+autocmd FileType javascript setlocal ts=4 sts=4 sw=4 omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal ts=4 sts=4 sw=4
 autocmd FileType css setlocal ts=4 noet sw=4 omnifunc=csscomplete#CompleteCSS
 autocmd bufread *.less set ft=less
 autocmd bufread *.md set ft=markdown
 
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_force_omni_patterns')
+  let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_force_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_force_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplcache_force_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" Support for github flavored markdown
+" via https://github.com/jtratner/vim-flavored-markdown
+" with .md extensions
+augroup markdown
+    au!
+    au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+augroup END
 
 " CtrlP
 " Setup some default ignores
@@ -194,6 +260,7 @@ nmap <leader>bs :CtrlPMRU<cr>
 let g:syntastic_check_on_open=1
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
+let g:syntastic_php_checkers = ['php']
 let g:syntastic_phpcs_disable=1
 let g:syntastic_puppet_lint_arguments="--no-only_variable_string-check --no-80chars-check --no-hard_tabs-check"
 let g:syntastic_phpcs_conf="--standard=Drupal --extensions=php,module,inc,install,test,profile,theme"
@@ -299,20 +366,20 @@ if !exists(":DiffOrig")
 		\ | wincmd p | diffthis
 endif
 
-colorscheme Tomorrow-Night-Eighties
+colorscheme Tomorrow-Night-Bright
 
 " auto complete and tab functionality :D
-function! InsertTabWrapper()
-	let col = col('.') - 1
-	if !col || getline('.')[col - 1] !~ '\k'
-		return "\<tab>"
-	else
-		return "\<c-p>"
-	endif
-endfunction
+"function! InsertTabWrapper()
+"	let col = col('.') - 1
+"	if !col || getline('.')[col - 1] !~ '\k'
+"		return "\<tab>"
+"	else
+"		return "\<c-p>"
+"	endif
+"endfunction
 
-nnoremap <tab> <C-r>=InsertTabWrapper()<cr>
-nnoremap <F2> :<C-U>setlocal lcs=tab:>-,trail:-,eol:$ list! list? <CR>
+"nnoremap <tab> <C-r>=InsertTabWrapper()<cr>
+nnoremap <F2> :<C-U>setlocal lcs=tab:>.,trail:~,eol:$ list! list? <CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
