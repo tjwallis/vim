@@ -2,135 +2,75 @@
 " This must be first, because it changes other options as a side effect.
 set nocompatible
 
-if has('nvim')
-	let s:editor_root=expand("~/.nvim")
-else
-	let s:editor_root=expand("~/.vim")
-endif
-if has("unix")
-	let s:uname = system("uname")
-	let g:python_host_prog='/usr/bin/python'
-	if s:uname == "Darwin\n"
-		let g:python_host_prog='/usr/bin/python'
-	endif
-endif
-
-" Setting up Vundle - the vim plugin bundler
-filetype off
-let &rtp = &rtp . ',' . s:editor_root . '/bundle/Vundle.vim'
-call vundle#begin(s:editor_root . '/bundle')
-
-" Vundle Manages itself
-Plugin 'VundleVim/Vundle.vim'
-
-" Plugins
-Plugin 'kien/ctrlp.vim'
-Plugin 'easymotion/vim-easymotion'
-Plugin 'majutsushi/tagbar'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/syntastic'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-"Plugin 'StanAngeloff/php.vim'
-"Plugin 'joonty/vim-phpqa'
-"Plugin 'vim-scripts/PDV--phpDocumentor-for-Vim'
-Plugin 'shawncplus/phpcomplete.vim'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-" Optional:
-Plugin 'honza/vim-snippets'
-Plugin 'vim-scripts/UltiSnips'
-Plugin 'xolox/vim-easytags'
-Plugin 'xolox/vim-misc'
-Plugin 'tpope/vim-sensible'
-Plugin 'bling/vim-airline'
-
-Plugin 'pangloss/vim-javascript'
-
-Plugin 'matze/vim-move'
-
-Plugin 'mattn/emmet-vim'
-
-Plugin 'junegunn/goyo.vim'
-
-" Plugin 'Valloric/YouCompleteMe'
-Plugin 'Shougo/neocomplcache.vim'
-Plugin 'Shougo/neosnippet.vim'
-
-" Enable Markdown Preview + GitHub flavored markdown
-Plugin 'jtratner/vim-flavored-markdown.git'
-Plugin 'nelstrom/vim-markdown-preview'
-
-" Color Schemes
-Plugin 'flazz/vim-colorschemes'
-
-call vundle#end()
-filetype plugin indent on    " required
-" Setting up Vundle - the vim plugin bundler end
-
-set autoread
+so ~/.vim/plugins.vim				"Manage Vundle plugins
 
 let mapleader = ","
 let g:mapleader = ","
 
-set so=7
+nnoremap ; :
 
-" turn on the WiLd menu
+"-------------------Functionality----------------------"
+
+syntax enable
+
+set history=100 " keep 50 lines of command line history
+set showcmd " display incomplete commands
+
+set autoread "read file when changes outside of vim
+
+" turn on the menu for comands
 set wildmenu
-
 set cmdheight=2
 
+"indenting
+set autoindent
+
+" Search
+set hlsearch
+set incsearch
 set ignorecase
 set smartcase
 
-set hlsearch
-set incsearch
+" Line Wrapping
+set wrap
+set lbr
+set textwidth=0
 
-set lazyredraw
-
-set showmatch
-set mat=2
-
-set nobackup
-set nowb
-set noswapfile
+" Tabs not spaces - DBS Pref
+set noexpandtab
+set tabstop=4
+set shiftwidth=4
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
+" backups
+set nobackup
 set nowritebackup " Only in case you don't want a backup file while editing
-set history=100 " keep 50 lines of command line history
-set ruler " show the cursor position all the time
-set showcmd " display incomplete commands
-set incsearch " do incremental searching
-set number
-set autoindent
+set noswapfile
 
-set lbr
-set tw=500
+set lazyredraw " Dont redraw when macros run
 
-set ai
-set si
-set wrap
+set hidden "keep buffers open
 
-
-
-set noexpandtab
-set tabstop=4
-set shiftwidth=4
 set mouse=a
 if has('unnamedplus')
 	set clipboard=unnamedplus
 else
 	set clipboard=unnamed
 endif
+
+"-------------------Cursor----------------------"
 set cursorline
-set showcmd
+set scrolloff=7						"minimum number of lines above and bellow cursor
+set ruler							" show the cursor position all the time
+
+"-------------------Visuals----------------------"
+colorscheme PaperColor
+set bg=dark
+set linespace=20
 set number
-set hidden
-set hlsearch
-set backspace=2
+
 " highlight tabs and trailing spaces
 set listchars=tab:▸\ ,trail:~
 set list
@@ -144,6 +84,7 @@ map k gk
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
 map <space> /
 map <c-space> ?
+map <leader><space> :nohlsearch<cr>
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
@@ -154,9 +95,6 @@ map <leader>tm :tabmove
 nmap <silent> <leader>ev :e $MYVIMRC<CR>
 nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-nmap <silent> ,/ :nohlsearch<CR>
-
-nnoremap ; :
 
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
@@ -256,6 +194,11 @@ nmap <leader>bb :CtrlPBuffer<cr>
 nmap <leader>bm :CtrlPMixed<cr>
 nmap <leader>bs :CtrlPMRU<cr>
 
+nmap <c-R> :CtrlPBufTag<cr>
+nmap <c-e> :CtrlPMRUFiles<cr>
+
+nmap <c-1> :NERDTreeToggle<cr>
+
 " Syntastic
 let g:syntastic_check_on_open=1
 let g:syntastic_always_populate_loc_list=1
@@ -315,18 +258,6 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-	set mouse=a
-endif
-
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-	syntax on
-	set hlsearch
-endif
-
 " Only do this part when compiled with support for autocommands.
 if has("autocmd")
 	" Enable file type detection.
@@ -366,7 +297,6 @@ if !exists(":DiffOrig")
 		\ | wincmd p | diffthis
 endif
 
-colorscheme Tomorrow-Night-Bright
 
 " auto complete and tab functionality :D
 "function! InsertTabWrapper()
@@ -414,7 +344,7 @@ vnoremap $$ <esc>`>a"<esc>`<i"<esc>
 vnoremap $q <esc>`>a'<esc>`<i'<esc>
 vnoremap $e <esc>`>a"<esc>`<i"<esc>
 
-command W w !sudo tee % > /dev/null
+command! W w !sudo tee % > /dev/null
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
