@@ -1,6 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =4
-let g:netrw_dirhist_1='/srv/http/prima/sites/all/themes'
-let g:netrw_dirhist_2='/srv/http/prima/sites/all/themes/pre'
-let g:netrw_dirhist_3='/home/tjwallis/.vim'
-let g:netrw_dirhist_4='/home/tjwallis/preheat'
