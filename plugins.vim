@@ -9,7 +9,7 @@ endif
 if has("unix")
 	let s:uname = system("uname")
 	let g:python_host_prog='/usr/bin/python'
-	if s:uname == "Darwin\n"
+	if s:uname == "Loren\n"
 		let g:python_host_prog='/usr/bin/python'
 	endif
 endif
@@ -32,19 +32,21 @@ Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
-"Plugin 'StanAngeloff/php.vim'
+Plugin 'othree/html5.vim'
+Plugin 'joshtronic/php.vim'
 "Plugin 'joonty/vim-phpqa'
 "Plugin 'vim-scripts/PDV--phpDocumentor-for-Vim'
 Plugin 'shawncplus/phpcomplete.vim'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 " Optional:
-Plugin 'honza/vim-snippets'
-Plugin 'vim-scripts/UltiSnips'
-Plugin 'xolox/vim-easytags'
+"Plugin 'honza/vim-snippets'
+"Plugin 'vim-scripts/UltiSnips'
+"Plugin 'xolox/vim-easytags'
 Plugin 'xolox/vim-misc'
 Plugin 'tpope/vim-sensible'
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 Plugin 'pangloss/vim-javascript'
 
@@ -61,6 +63,8 @@ Plugin 'Shougo/neosnippet.vim'
 " Enable Markdown Preview + GitHub flavored markdown
 Plugin 'jtratner/vim-flavored-markdown.git'
 Plugin 'nelstrom/vim-markdown-preview'
+
+Plugin 'jwalton512/vim-blade'
 
 " Color Schemes
 Plugin 'flazz/vim-colorschemes'
